@@ -1,0 +1,89 @@
+@import "./variables";
+@import "./mixins";
+
+//#region #1 general
+.elementor-element-941b88b {
+  display: none;
+}
+
+.elementor-section.elementor-section-boxed > .elementor-container {
+  max-width: 2000px !important;
+}
+.elementor-column-gap-default
+  > .elementor-column
+  > .elementor-element-populated {
+  padding: 0 !important;
+}
+
+.configurator3d_post {
+  justify-content: right;
+  pointer-events: all !important;
+}
+
+.summary.entry-summary {
+  padding: 0 !important;
+}
+
+.elementor-element-c3ac357 {
+  width: auto !important;
+}
+
+.elementor-section.elementor-section-boxed > .elementor-container {
+  display: block;
+}
+
+.viewer-loader,
+.configurator3d_post_cover {
+  display: none;
+}
+//#endregion
+
+//#region #2 AR_FILTER (INTERFACE)
+.ar_filter {
+  width: 100% !important;
+  padding: 0 !important;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+//#endregion
+
+//#region #3 MODEL
+.ar_conf_container {
+  position: absolute !important;
+  height: 100vh;
+}
+//#endregion
+
+//#region #4 SIDE-MENU
+.side_menu {
+  position: absolute;
+  right: $max-width-for-interface + ($padding20 * 2);
+}
+//#endregion
+
+//#region #5 MAIN_MENU
+
+.main_menu {
+  background-color: $white-color;
+  margin: 20px !important;
+  max-width: $max-width-for-interface;
+  height: calc(100vh - 200px);
+  @include radius;
+  @include shadow;
+  background-color: $white-color;
+  padding: $padding30 !important;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+//#endregion
+
+//#region #1 SUMMARY
+.ar_summary {
+  display: none !important;
+}
+//#endregion
