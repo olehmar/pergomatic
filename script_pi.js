@@ -2479,6 +2479,16 @@ async function prepareUI() {
 
           buttonNext.on("click", handleButtonClick);
           buttonBack.on("click", handleButtonRequestClick);
+
+          setTimeout(() => {
+            const iframe = jQuery("#inline-9CAMS0Dv7CozHFhkP8R4");
+            const iframeContents = iframe.contents();
+            const formInput = iframeContents.find(
+              "#el_9CAMS0Dv7CozHFhkP8R4_nFD7APw1jitGwOsuASt4_7"
+            );
+            console.log("iframeContents :", iframeContents);
+            console.log("formInput :", formInput);
+          }, 5000);
         } else {
           jQuery(".header_menu").removeClass("overview-center");
 
@@ -3335,10 +3345,10 @@ async function prepareUI() {
 
           <!-- add class 'active' to show it -->
           <div id="popup-item-requestpdf" class="popup-item popup-item-requestpdf">
-            <iframe
-              src="https://api.leadconnectorhq.com/widget/form/pS6mWWYoHGuVoSf6Nkt5"
+             <iframe
+              src="https://api.leadconnectorhq.com/widget/form/9CAMS0Dv7CozHFhkP8R4"
               style="width:100%;height:100%;border:none;border-radius:15px"
-              id="inline-pS6mWWYoHGuVoSf6Nkt5"
+              id="inline-9CAMS0Dv7CozHFhkP8R4" 
               data-layout="{'id':'INLINE'}"
               data-trigger-type="alwaysShow"
               data-trigger-value=""
@@ -3347,13 +3357,13 @@ async function prepareUI() {
               data-deactivation-type="neverDeactivate"
               data-deactivation-value=""
               data-form-name="Pergomatic | Download PDF"
-              data-height="752"
-              data-layout-iframe-id="inline-pS6mWWYoHGuVoSf6Nkt5"
-              data-form-id="pS6mWWYoHGuVoSf6Nkt5"
-              title="Pergomatic | Download PDF"
-            >
+              data-height="2921"
+              data-layout-iframe-id="inline-9CAMS0Dv7CozHFhkP8R4"
+              data-form-id="9CAMS0Dv7CozHFhkP8R4"
+               title="Pergomatic | Download PDF"
+                   >
             </iframe>
-            <script src="https://api.leadconnectorhq.com/js/form_embed.js"></script>
+            <script src="https://api.leadconnectorhq.com/js/form_embed.js"></script>            
           </div>
 
           <!-- add class 'active' to show it -->
@@ -3453,12 +3463,131 @@ async function prepareUI() {
 
     jQuery(".configurator3d_post").append(popupsAndModals);
 
+    window.addEventListener("message", async function (event) {
+      console.log("MESSAGE");
+
+      if (event.data && event.data.event === "formSubmitted") {
+        console.log(popupsAndModals.find("#inline-9CAMS0Dv7CozHFhkP8R4"));
+
+        // onMessage(event);
+
+        // popupsAndModals
+        //   .find("#inline-9CAMS0Dv7CozHFhkP8R4")
+        //   .contentWindow.postMessage({ requestPergomaticData: true }, "*");
+
+        // scrapInfoAnPutInCustomIframe(
+        //   popupsAndModals.find("#inline-9CAMS0Dv7CozHFhkP8R4")
+        // );
+      }
+    });
+
     qrcode = jQuery("#qrcode");
 
     validateForm("#popup-item-requestpdf", "#js-requestQ");
     validateForm("#popup-item-requestpdf-pergomatic", "#js-downloadPdf"); //! TEMP - uncomment it before release
   });
   // *************************************
+  function scrapInfoAnPutInCustomIframe(container) {
+    const idOfInputs = {
+      typePergola: "#el_9CAMS0Dv7CozHFhkP8R4_nFD7APw1jitGwOsuASt4_7",
+      walls: "#el_9CAMS0Dv7CozHFhkP8R4_IaWATwlkAB6UwCFNJiHJ_8",
+      demension: "#el_9CAMS0Dv7CozHFhkP8R4_0hJcGTCVinZ2nWnGH05G_9",
+      frameColor: "#el_9CAMS0Dv7CozHFhkP8R4_erqnrXhtIWvCE68Y3Jql_10",
+      roofColor: "#el_9CAMS0Dv7CozHFhkP8R4_LNq2ukycvpS8uHcJ5a6A_11",
+      subSystems: "#el_9CAMS0Dv7CozHFhkP8R4_N2z3xKqO1C2KQIozf5pM_12",
+      options: "#el_9CAMS0Dv7CozHFhkP8R4_iQF8dFeCiRanRdNk9VkH_13",
+      pdfFile: "#el_9CAMS0Dv7CozHFhkP8R4_SjbFkmqqUjhVCisHtvsR_14",
+    };
+
+    // TYPE PERGOLA
+    const typeInput = document.querySelector(`${idOfInputs.typePergola} input`);
+    if (typeInput) typeInput.value = pergola.settings.typePergola;
+
+    // WALLS
+    const wallInputs = document.querySelectorAll(`${idOfInputs.walls} input`);
+    if (wallInputs.length >= 3) {
+      if (pergola.settings.backWall) wallInputs[0].checked = true;
+      if (pergola.settings.leftWall) wallInputs[1].checked = true;
+      if (pergola.settings.rightWall) wallInputs[2].checked = true;
+    }
+
+    // DIMENSION
+    const dimInputs = document.querySelectorAll(
+      `${idOfInputs.demension} input`
+    );
+    if (dimInputs.length >= 3) {
+      dimInputs[0].value = pergola.settings.width;
+      dimInputs[1].value = pergola.settings.depth;
+      dimInputs[2].value = pergola.settings.height;
+    }
+
+    // FRAME COLOR
+    document
+      .querySelectorAll(`${idOfInputs.frameColor} label`)
+      .forEach((label) => {
+        const text = label.textContent.trim().toLowerCase();
+        if (text === pergola.settings.frameColor.toLowerCase()) {
+          const inputId = label.getAttribute("for");
+          if (inputId) {
+            const input = document.getElementById(inputId);
+            if (input) input.checked = true;
+          }
+        }
+      });
+
+    // ROOF COLOR
+    document
+      .querySelectorAll(`${idOfInputs.roofColor} label`)
+      .forEach((label) => {
+        const text = label.textContent.trim().toLowerCase();
+        if (text === pergola.settings.roofColor.toLowerCase()) {
+          const inputId = label.getAttribute("for");
+          if (inputId) {
+            const input = document.getElementById(inputId);
+            if (input) input.checked = true;
+          }
+        }
+      });
+
+    // SUB SYSTEMS
+    const subInputs = document.querySelectorAll(
+      `${idOfInputs.subSystems} input`
+    );
+    if (subInputs.length >= 3) {
+      if (pergola.checkSystemInScene(pergolaConst.systemType.BlindShade)) {
+        subInputs[0].checked = true;
+      }
+      if (
+        pergola.checkSystemInScene(pergolaConst.systemType.SlidingGlassDoor)
+      ) {
+        subInputs[1].checked = true;
+      }
+      if (pergola.checkSystemInScene(pergolaConst.systemType.GuilotineGlass)) {
+        subInputs[2].checked = true;
+      }
+    }
+
+    // OPTIONS
+    const optionInputs = document.querySelectorAll(
+      `${idOfInputs.options} input`
+    );
+    if (optionInputs.length >= 5) {
+      if (pergola.settings.perRGB) optionInputs[0].checked = true;
+      if (pergola.settings.perLED) optionInputs[1].checked = true;
+      if (pergola.settings.spotLED) optionInputs[2].checked = true;
+      if (pergola.settings.heaters) optionInputs[3].checked = true;
+      if (pergola.settings.fans) optionInputs[4].checked = true;
+    }
+
+    // PDF LINK (закоментовано, як у тебе)
+    // const pdfInput = document.querySelector(`${idOfInputs.pdfFile} input`);
+    // if (pdfInput) pdfInput.value = pdfBase;
+
+    console.log(
+      // container.find(`#el_9CAMS0Dv7CozHFhkP8R4_IaWATwlkAB6UwCFNJiHJ_8`),
+      pergola.settings.width
+    );
+  }
 
   function closePopup() {
     jQuery(".product-type-3dmodel .popup").removeClass("active");
@@ -3562,11 +3691,8 @@ async function prepareUI() {
     validateForm("#popup-item-requestpdf-pergomatic", "#js-downloadPdf");
   });
 
-  jQuery(document).on(
-    "submit",
-    "#popup-item-requestpdf form",
-    async function (event) {
-      event.preventDefault();
+  window.addEventListener("message", async function (event) {
+    if (event.data && event.data.event === "formSubmitted") {
       closePopup();
       closeModal();
 
@@ -3579,7 +3705,6 @@ async function prepareUI() {
       jQuery("body").removeClass("body-no-loader");
       jQuery("html").removeClass("body-no-loader");
 
-      console.log("PDF");
       await createPDF("download");
 
       sky.visible = true;
@@ -3587,11 +3712,13 @@ async function prepareUI() {
 
       jQuery("body").addClass("body-no-loader");
       jQuery("html").addClass("body-no-loader");
-
-      // sendFormDataToGoogleSheets();
-      // sendFormDataToMake(); //! NEW FEATURE (nned to be tested)
     }
-  );
+
+    // event.preventDefault();
+
+    // sendFormDataToGoogleSheets();
+    // sendFormDataToMake(); //! NEW FEATURE (nned to be tested)
+  });
 }
 
 function fixScroll() {
@@ -4466,6 +4593,23 @@ async function afterModelLogic() {
   // });
 
   //#endregion
+
+  // const originalFetch = window.fetch;
+  // window.fetch = async (...args) => {
+  //   const [resource, config] = args;
+
+  //   if (
+  //     typeof resource === "string" &&
+  //     resource.includes("https://backend.leadconnectorhq.com/forms/submit")
+  //   ) {
+  //     console.log("🎯 Перехоплено fetch на submit форму!");
+
+  //     // Твоя логіка тут
+  //     alert("Форма на LeadConnector була відправлена!");
+  //   }
+
+  //   return originalFetch(...args);
+  // };
 }
 
 async function startSettings() {
@@ -7040,6 +7184,28 @@ class PergolaObject {
         ? this.setPostsPosition("glassroomPosts", point_post_length)
         : this.setPostsPosition("backPosts", point_post_length);
     }
+
+    //SET CENTER POSTS
+    if (point_post_width.length && point_post_length.length) {
+      const posts = this.post.midlePosts;
+
+      for (let i = 0; i < point_post_width.length; i++) {
+        const point = point_post_width[i];
+
+        for (let j = 0; j < point_post_length.length; j++) {
+          const pointZ = point_post_length[j].x;
+
+          const element = this.getAvaliableObjectFromOneArray(posts);
+          console.log(point, element);
+
+          element.object.position.x = point.z;
+          element.object.position.z = pointZ;
+
+          this.changeObjectVisibility(true, element.object);
+          element.active = true;
+        }
+      }
+    }
   }
 
   setPostsPosition(nameArray, points) {
@@ -7886,20 +8052,20 @@ class PergolaObject {
       this.changeObjectVisibility(true, element.object);
       element.active = true;
 
-      //SET CENTER BEAM
-      for (let j = 0; j < point_length.length; j++) {
-        const point = point_length[j];
-        const centerPost = this.getAvaliableObjectFromOneArray(
-          this.post.midlePosts
-        );
+      //SET CENTER POST
+      // for (let j = 0; j < point_length.length; j++) {
+      //   const point = point_length[j];
+      //   const centerPost = this.getAvaliableObjectFromOneArray(
+      //     this.post.midlePosts
+      //   );
 
-        // console.log(centerPost);
+      //   // console.log(centerPost);
 
-        centerPost.object.position.z = beamPoint.x;
-        centerPost.object.visible = pergolaSettings.steel ? false : true;
-        centerPost.object.position.x = point.z;
-        centerPost.active = true;
-      }
+      //   centerPost.object.position.z = beamPoint.x;
+      //   centerPost.object.visible = pergolaSettings.steel ? false : true;
+      //   centerPost.object.position.x = point.z;
+      //   centerPost.active = true;
+      // }
     }
   }
 
@@ -8287,7 +8453,7 @@ class PergolaObject {
       this.settings.typePergola === 2 ? 0.27 : this.settings.widthLouver;
     const canMovDmin = size;
 
-    const addQty = last ? 0 : this.settings.typePergola === 2 ? 0 : 1;
+    const addQty = 1;
     let canQty = Math.ceil((roofWidth - canFixDmin) / canMovDmin) + addQty;
     const canopyOpenWidth = canMovDmin * canQty + canFixDfolded;
     const canopyOffset = roofWidth - canopyOpenWidth;
@@ -8296,11 +8462,13 @@ class PergolaObject {
 
     const offsetThreshold = canMovDmin * 0.7;
 
-    if (Math.abs(canopyOffset) < offsetThreshold) {
-      if (!last) {
-        canQty++;
-      }
-    }
+    // if (Math.abs(canopyOffset) < offsetThreshold) {
+    //   if (!last) {
+    //     canQty++;
+    //   }
+    // }
+
+    // canQty++;
 
     for (let i = 0; i <= canQty; i++) {
       const posStart = startX + i * canMovDfolded;
@@ -12003,7 +12171,6 @@ async function createPDF(opt = "open") {
             }
           });
 
-
         default:
           rej("invalid request");
           break;
@@ -12974,16 +13141,13 @@ jQuery(window).trigger("resize");
 const onMessage = function (e) {
   let data = e.data;
 
-  if (data?.type === "sendLeadInfo") {
+  if (data?.type === "sendLeadInfo" || event.data.event === "formSubmitted") {
     (async () => {
       // ✅ turn on loader
       jQuery("body").addClass("body-no-loeader");
       jQuery("html").addClass("body-no-loeader");
 
       try {
-        const pdfBase = await createPDF("base64");
-        const userData = { base64: pdfBase };
-
         const userPergolaData = {
           type: `${typePergolaText[pergola.settings.typePergola]}`,
           walls: {
@@ -13030,9 +13194,10 @@ const onMessage = function (e) {
           },
         };
 
-        // ✅ Надсилаємо дані
+        // ✅ SENT DATA
         e.source.postMessage(userPergolaData, "*");
-        e.source.postMessage(userData, "*");
+
+        await createPDF("download");
       } catch (err) {
         console.error("Error generating PDF or sending data", err);
       } finally {
@@ -13044,7 +13209,15 @@ const onMessage = function (e) {
   }
 };
 
-window.addEventListener("message", onMessage);
+// window.addEventListener("message", onMessage);
+
+// setTimeout(() => {
+//   console.log(document.getElementById("inline-9CAMS0Dv7CozHFhkP8R4"));
+
+// document
+//   .getElementById("inline-9CAMS0Dv7CozHFhkP8R4")
+//   .contentWindow.postMessage({ requestPergomaticData: true }, "*");
+// }, 500);
 
 const reconectDelay = 30000;
 
